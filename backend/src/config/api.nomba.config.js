@@ -1,0 +1,24 @@
+import axios from 'axios';
+import config from './env.config.js'
+import { fetchAccessToken } from '../services/nomba.service.js'
+
+const api = axios.create({
+  baseURL: config.MONIFY_API_URL || 'https://sandbox.monnify.com',
+  headers: {
+    'Content-Type': 'application/json',
+  }
+});
+
+api.interceptors.request.use(
+  async (config) => {
+    const access_token = await fetchAccessToken();
+    if (access_token) {
+      config.headers.Authorization = `Bearer ${access_token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+export default api;

@@ -1,0 +1,321 @@
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import api from "../api/axios";
+
+import {
+  Loader2,
+  Receipt,
+  BookOpen,
+  User,
+  CalendarDays,
+  CreditCard,
+  ArrowLeft,
+  AlertCircle,
+} from "lucide-react";
+
+export default function PaymentInvoice() {
+  const navigate = useNavigate();
+  const { paymentId } = useParams();
+  const [invoice, setInvoice] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [processing, setProcessing] = useState(false);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    loadInvoice();
+  }, []);
+
+  async function loadInvoice() {
+    setLoading(true);
+    try {
+      const res = await api.get(`/payments/me/invoice`);
+      //console.log(res.data)
+      setInvoice(res.data);
+    } catch (error) {
+      console.error(error);
+      setMessage(
+        error.response?.data?.message ||
+          "Unable to load invoice."
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function confirmPayment() {
+
+    if (!invoice) return;
+
+    setProcessing(true);
+
+    try {
+      const response = await api.get(
+        `/payments/me/status`
+      );
+
+      if (response.data.payment_url) {
+
+        window.location.href =
+          response.data.payment_url;
+
+        return;
+      }
+
+      if (response.data.status === "paid") {
+
+        navigate("/dashboard");
+
+        return;
+      }
+
+    } catch (error) {
+      console.error(error);
+      setMessage(
+        error.response?.data?.message 
+          //"Unable to confirm payment."
+      );
+
+    } finally {
+      setProcessing(false);
+      navigate("/dashboard");
+    }
+  }
+
+  if (loading) {
+
+    return (
+
+      <div className="flex h-screen items-center justify-center">
+
+        <Loader2
+          className="animate-spin text-emerald-600"
+          size={40}
+        />
+
+      </div>
+
+    );
+
+  }
+
+  if (!invoice) {
+
+    return (
+
+      <div className="flex h-screen items-center justify-center">
+
+        <div className="rounded-3xl bg-white p-10 shadow text-center">
+
+          <AlertCircle
+            size={60}
+            className="mx-auto text-red-500"
+          />
+
+          <h2 className="mt-5 text-2xl font-bold">
+
+            Invoice Not Found
+
+          </h2>
+
+          <button
+            onClick={() => navigate(-1)}
+            className="mt-6 rounded-xl bg-emerald-500 px-6 py-3 font-semibold text-white"
+          >
+
+            Go Back
+
+          </button>
+
+        </div>
+
+      </div>
+
+    );
+
+  }
+
+  return (
+
+    <div className="min-h-screen bg-slate-100">
+
+      <div className="mx-auto max-w-6xl px-3 py-6">
+
+        {/* <div className="mb-10 flex items-center justify-between"> */}
+
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 rounded-xl border bg-white px-3 py-2 hover:bg-slate-50"
+          >
+
+            <ArrowLeft size={18} />
+
+            Back
+
+          </button>
+
+          <h1 className="flex items-center gap-3 text-4xl font-bold">
+
+            Payment Checkout
+
+          </h1>
+
+          <div />
+
+        {/* </div> */}
+
+        {message && (
+
+          <div className="mb-8 rounded-xl border border-red-200 bg-red-50 p-4 text-red-600">
+
+            {message}
+
+          </div>
+
+        )}
+
+        <div className="rounded-3xl mt-5 bg-white p-5 shadow">
+                  {/* Header */}
+
+          {/* Invoice Summary */}
+
+          <div className="mt-10 rounded-2xl border p-5">
+
+            <h3 className="mb-8 text-2xl font-bold">
+
+              Payment Summary
+
+            </h3>
+
+            <div className="space-y-6 min-w-screen lg:flex-row lg:items-center lg:justify-between">
+
+              <div className="flex justify-between">
+
+                <span className="text-slate-500">
+
+                  Payment For
+
+                </span>
+
+                <span className="font-semibold">
+
+                  {invoice.invoice_no}
+
+                </span>
+
+              </div>
+
+              <div className="flex justify-between">
+
+                <span className="text-slate-500">
+
+                  Account Number
+
+                </span>
+
+                <span className="font-semibold">
+
+                  {invoice.account_number}
+
+                </span>
+
+              </div>
+
+              <div className="flex justify-between">
+
+                <span className="text-slate-500">
+
+                  Bank Name
+
+                </span>
+
+                <span className="font-semibold">
+
+                  {invoice.bank_name}
+
+                </span>
+
+              </div>
+
+              <div className="flex justify-between">
+
+                <span className="text-slate-500">
+
+                  Account Name
+
+                </span>
+
+                <span className="font-semibold">
+
+                  {invoice.account_name}
+
+                </span>
+
+              </div>
+
+              <div className="flex justify-between">
+
+                <span className="text-slate-500">
+
+                  Amount
+
+                </span>
+
+                <span className="font-semibold">
+
+                  ₦{Number(invoice.expected_amount).toLocaleString()}
+
+                </span>
+
+              </div>
+
+              <hr />
+
+            </div>
+
+          </div>
+                    {/* Actions */}
+            <div className="flex justify-center p-4">
+              <button
+                disabled={
+                  processing ||
+                  invoice.status === "paid"
+                }
+                onClick={confirmPayment}
+                className="flex min-w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 px-8 py-4 font-semibold text-white transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-70"
+              >
+
+                {processing ? (
+
+                  <>
+                    <Loader2
+                      className="animate-spin"
+                      size={18}
+                    />
+
+                    Processing...
+
+                  </>
+
+                ) : invoice.status === "paid" ? (
+
+                  "Already Paid"
+
+                ) : (
+
+                  <>
+                    I Have Paid
+                  </>
+
+                )}
+              </button>
+            </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  );
+
+}

@@ -5,7 +5,7 @@ const addVirtualAccount = async (studentId, virtualAccountData) => {
     const queryText = `INSERT INTO 
         virtual_accounts (student_id, account_number, bank_name, account_name, account_ref) 
         VALUES ($1, $2, $3, $4, $5)`
-    const res = await query(queryText, [studentId, accounts.accountNumber, accounts.bankName, accountName, accountReference])
+    const res = await query(queryText, [studentId, accounts[0].accountNumber, accounts[0].bankName, accountName, accountReference])
 }
 
 const addInvoice = async (studentId, expectedAmount) => {

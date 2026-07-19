@@ -1,7 +1,7 @@
 import config from './config/env.config.js';
 import app from './app.js';
 import query from './config/db.config.js';
-import { createVirtualAccount, fetchSubAccountTransaction, fetchTransactionHistory, runBackgroundTokenManager, fetchVirtualAccount } from './services/nomba.service.js' 
+import { createVirtualAccount, fetchSubAccountTransaction, fetchTransactionHistory, runBackgroundTokenManager, fetchVirtualAccount } from './services/monnify.service.js' 
 
 const {PORT} = config;
 

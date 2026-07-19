@@ -1,9 +1,9 @@
-import api from '../config/api.nomba.config.js'
+import api from '../config/api.monnify.config.js'
 import config from '../config/env.config.js';
 import { getStudentEnrollments } from '../models/enrollment.model.js'
 import { fetchStudentById } from '../models/student.model.js'
 import { fetchInvoice, addInvoice, addVirtualAccount, fetchInvoiceAndVa } from '../models/payment.model.js';
-import { createVirtualAccount } from './nomba.service.js';
+import { createVirtualAccount } from './monnify.service.js';
 
 const fetchStudentEnrollmentsById = async (studentId) => {
     try{
@@ -34,10 +34,8 @@ const generateInvoice = async (studentId) => {
         //await addInvoice(studentId, expectedAmount); // add student invoice details to database
         const invoiceRes = await fetchInvoice(studentId); // fetch only invoice data to be used in VA creation
         const vaRes = await createVirtualAccount (invoiceRes.account_ref, studentRes.full_name, studentRes.email); // create monnify virtual account
-        console.log('3:', vaRes)
         await addVirtualAccount(studentId, vaRes.responseBody); // Add VA data to the database
         const invoiceData = await fetchInvoiceAndVa(studentId); // fetch data needed on the invoice from invoice and VA table
-        //console.log(vaRes)
         return invoiceData;
     } catch (error) {
         console.error(error.response?.data || error.message);

@@ -1,5 +1,5 @@
 import axios from "axios";
-import api from '../config/api.nomba.config.js'
+import api from '../config/api.monnify.config.js'
 import config from "../config/env.config.js"
 
 let cachedAccessToken = null
@@ -72,8 +72,6 @@ const createVirtualAccount = async (account_ref, studentName, studentEmail) => {
     try {
         const subAccountId = config.NOMBA_SUB_ACCOUNT_ID
         const res = await api.post(`/api/v2/bank-transfer/reserved-accounts`, {
-            // accountRef: ,
-            // accountName: studentName,
             accountReference: account_ref,
             accountName: studentName,
             currencyCode: "NGN",
@@ -85,8 +83,7 @@ const createVirtualAccount = async (account_ref, studentName, studentEmail) => {
         })
         const vaRes = res.data;
         if (vaRes.responseCode !== '0') throw new Error('Virtual account creation failed');
-        //console.log('2:', vaRes)
-        return vaRes.data
+        return vaRes;
     } catch (error) {
         console.error(error.response?.data || error.message)
     }

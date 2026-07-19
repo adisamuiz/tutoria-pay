@@ -1,6 +1,6 @@
 import axios from 'axios';
 import config from './env.config.js'
-import { fetchAccessToken } from '../services/nomba.service.js'
+import { fetchAccessToken } from '../services/monnify.service.js'
 
 const api = axios.create({
   baseURL: config.MONIFY_API_URL || 'https://sandbox.monnify.com',

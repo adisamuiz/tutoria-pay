@@ -17,9 +17,9 @@ async function startServer() {
        //await fetchVirtualAccount('fe8821ed-c00e-41f6-af1f-2878f3eafb67')
         //await fetchTransactionHistory('7918010552')
 
-        const tunnel = await ngrok.forward({ addr: PORT, authtoken_from_env: true });
-        console.log(`\n🌐 Your temporary public webhook URL is:`);
-        console.log(`${tunnel.url()}/webhook\n`);
+        // const tunnel = await ngrok.forward({ addr: PORT, authtoken_from_env: true });
+        // console.log(`\n🌐 Your temporary public webhook URL is:`);
+        // console.log(`${tunnel.url()}/webhook\n`);
         app.listen(PORT, () => {
             console.log(`app is listening at http://localhost:${PORT}`);
         });

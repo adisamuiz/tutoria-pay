@@ -17,7 +17,7 @@ const getAccessToken = async () => {
                 'Content-Type': 'application/json',
             },
         });
-        console.log(response.data.responseBody)
+        //console.log(response.data.responseBody)
         if (response.data.responseCode !== '0') throw new Error('authentication failed');
         return response.data
     } catch (error) {

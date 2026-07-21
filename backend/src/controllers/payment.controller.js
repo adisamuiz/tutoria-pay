@@ -1,4 +1,5 @@
 import { fetchStudentEnrollmentsById, fetchPaymentInvoice } from "../services/payment.service.js";
+import { fetchPaymentStatus } from "../services/webhook.service.js";
 
 const fetchStudentEnrollments = async(req, res) => {
     try {
@@ -39,12 +40,11 @@ const getPaymentStatus = async(req, res) => {
         if (!studentId) {
             return res.status(400).json({ message: 'Student ID is required' });
         };
-        const invoiceRes = await fetchPaymentInvoice(studentId)
-        if (!invoiceRes) {
-            return res.status(404).json({ message: 'invoice not found' });
-        };
-        //console.log(invoiceRes) 
-        res.status(200).json(invoiceRes);
+        const paymentRes = await fetchPaymentStatus()
+        if (!paymentRes) {
+            return res.status(404).json({ message: 'payment not found' });
+        }; 
+        res.status(200).json(paymentRes);
     } catch (error) {
         res.status(500).json({ message: 'Error getting invoice' });
     }

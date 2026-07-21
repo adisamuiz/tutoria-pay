@@ -90,7 +90,7 @@ export default function App() {
           /> */}
 
           <Route
-              path="/payment/success/:paymentId"
+              path="/payment/success"
               element={<PaymentSuccess />}
           />
 

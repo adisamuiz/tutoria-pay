@@ -17,30 +17,11 @@ const getAccessToken = async () => {
                 'Content-Type': 'application/json',
             },
         });
-        //console.log(response.data)
+        console.log(response.data.responseBody)
         if (response.data.responseCode !== '0') throw new Error('authentication failed');
         return response.data
     } catch (error) {
         console.error('Monnify Authentication Failed:', error.response?.data || error.message);
-    }
-}
-
-const refreshAccessToken = async (accessToken, refreshToken) => {
-    try {
-        const response = await axios.post('https://api.nomba.com/v1/auth/token/refresh', {
-            'grant_type': 'refresh_token',
-            'refresh_token': refreshToken,
-        }, {
-            headers: {
-                'Authorization': `Bearer ${accessToken}`,
-                'Content-Type': 'application/json',
-                'accountId': config.NOMBA_MAIN_ACCOUNT_ID,
-            },
-        });
-        if (response.data.code !== '00') throw new Error('authentication failed');
-        return response.data.data // return nomba authentication details
-    } catch (error) {
-        console.error('Nomba Authentication Failed:', error.response?.data || error.message);
     }
 }
 
@@ -77,7 +58,7 @@ const createVirtualAccount = async (account_ref, studentName, studentEmail) => {
             currencyCode: "NGN",
             contractCode: config.MONIFY_CONTRACT_CODE,
             customerEmail: studentEmail,
-            bvn: "21212121444",
+            //bvn: "21212121444",
             customerName: studentName,
             getAllAvailableBanks: true
         })

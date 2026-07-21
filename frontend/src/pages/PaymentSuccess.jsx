@@ -29,43 +29,8 @@ export default function PaymentSuccess() {
     setLoading(true);
 
     try {
-      /*
-      ============================================================
-      BACKEND ENDPOINT
-
-      GET /payments/:paymentId/status
-
-      Response
-
-      {
-        "id":15,
-        "status":"paid",
-        "reference":"NMB938483938",
-        "invoice_no":"INV-20260709-00015",
-
-        "amount":50000,
-
-        "currency":"NGN",
-
-        "paid_at":"2026-07-09T10:30:00Z",
-
-        "course":{
-            "id":2,
-            "title":"Frontend Development"
-        },
-
-        "student":{
-            "id":1,
-            "full_name":"John Doe"
-        }
-      }
-      ============================================================
-      */
-
-      const res = await api.get(
-        `/payments/${paymentId}/status`
-      );
-
+      const res = await api.get(`/payments/me/status`);
+      console.log(res)
       setPayment(res.data);
 
     } catch (error) {
@@ -159,18 +124,11 @@ export default function PaymentSuccess() {
 
             </h1>
 
-            <p className="mt-3 max-w-xl text-lg text-slate-500">
-
-              Your payment has been successfully received and verified.
-              Your enrollment has been updated automatically.
-
-            </p>
-
           </div>
 
           {/* Payment Details */}
 
-          <div className="mt-12 grid gap-8 lg:grid-cols-2">
+          <div className="mt-12 space-y-6 min-w-screen lg:flex-row lg:items-center lg:justify-between">
 
             {/* Left */}
 
@@ -196,7 +154,7 @@ export default function PaymentSuccess() {
 
                   <span className="font-semibold">
 
-                    {payment.invoice_no}
+                    {/* {payment.invoice_no} */}
 
                   </span>
 
@@ -212,7 +170,7 @@ export default function PaymentSuccess() {
 
                   <span className="font-semibold">
 
-                    {payment.reference}
+                    {payment.transactionReference}
 
                   </span>
 
@@ -244,7 +202,7 @@ export default function PaymentSuccess() {
 
                   <span className="font-semibold">
 
-                    {payment.currency}
+                    {/* {payment.currency} */}
 
                   </span>
 
@@ -260,7 +218,7 @@ export default function PaymentSuccess() {
 
                   <span className="text-2xl font-bold text-emerald-600">
 
-                    ₦{Number(payment.amount).toLocaleString()}
+                    ₦{Number(payment.amountPaid).toLocaleString()}
 
                   </span>
 
@@ -276,89 +234,7 @@ export default function PaymentSuccess() {
 
                   <span className="font-semibold">
 
-                    {new Date(payment.paid_at).toLocaleString()}
-
-                  </span>
-
-                </div>
-
-              </div>
-
-            </div>
-
-            {/* Right */}
-
-            <div className="rounded-2xl border bg-slate-50 p-8">
-
-              <h2 className="mb-8 flex items-center gap-2 text-2xl font-bold">
-
-                <BookOpen />
-
-                Enrollment
-
-              </h2>
-
-              <div className="space-y-6">
-
-                <div className="flex items-center justify-between">
-
-                  <span className="text-slate-500">
-
-                    Course
-
-                  </span>
-
-                  <span className="font-semibold">
-
-                    {payment.course?.title}
-
-                  </span>
-
-                </div>
-
-                <div className="flex items-center justify-between">
-
-                  <span className="text-slate-500">
-
-                    Student
-
-                  </span>
-
-                  <span className="font-semibold">
-
-                    {payment.student?.full_name}
-
-                  </span>
-
-                </div>
-
-                <div className="flex items-center justify-between">
-
-                  <span className="text-slate-500">
-
-                    Payment ID
-
-                  </span>
-
-                  <span className="font-semibold">
-
-                    #{payment.id}
-
-                  </span>
-
-                </div>
-
-                <div className="flex items-center justify-between">
-
-                  <span className="text-slate-500">
-
-                    Reference
-
-                  </span>
-
-                  <span className="font-semibold">
-
-                    {payment.reference}
+                    {new Date(payment.paymentDate).toLocaleString()}
 
                   </span>
 
@@ -383,13 +259,6 @@ export default function PaymentSuccess() {
             </button>
 
             <button
-              onClick={() => navigate("/payments/history")}
-              className="rounded-xl border border-slate-300 px-8 py-4 font-semibold text-slate-700 transition hover:bg-slate-100"
-            >
-              Payment History
-            </button>
-
-            <button
               onClick={() => window.print()}
               className="rounded-xl border border-slate-300 px-8 py-4 font-semibold text-slate-700 transition hover:bg-slate-100"
             >
@@ -397,69 +266,6 @@ export default function PaymentSuccess() {
             </button>
 
           </div>
-
-          {/* Payment Notice */}
-
-          <div className="mt-12 rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
-
-            <h3 className="text-lg font-bold text-emerald-700">
-
-              What's Next?
-
-            </h3>
-
-            <p className="mt-3 leading-7 text-slate-700">
-
-              Your payment has been successfully confirmed.
-              Your enrollment has already been updated and you can now
-              continue learning from your student dashboard.
-
-            </p>
-
-          </div>
-
-          {/* =========================================================
-
-          BACKEND ENDPOINTS REQUIRED
-
-          ==========================================================
-
-          GET /payments/:paymentId/status
-
-          Returns
-
-          {
-              "id": 15,
-              "status":"paid",
-              "reference":"NMB283847474",
-              "invoice_no":"INV-20260709-0001",
-              "amount":50000,
-              "currency":"NGN",
-              "paid_at":"2026-07-09T15:20:00Z",
-
-              "student":{
-                  "id":1,
-                  "full_name":"John Doe"
-              },
-
-              "course":{
-                  "id":2,
-                  "title":"Frontend Development"
-              }
-          }
-
-
-          OPTIONAL ENDPOINT
-
-          GET /payments/:paymentId/receipt
-
-          Returns
-
-          {
-             "download_url":"https://..."
-          }
-
-          ======================================================== */}
 
         </div>
 

@@ -45,40 +45,9 @@ export default function PaymentInvoice() {
   async function confirmPayment() {
 
     if (!invoice) return;
-
     setProcessing(true);
-
-    try {
-      const response = await api.get(
-        `/payments/me/status`
-      );
-
-      if (response.data.payment_url) {
-
-        window.location.href =
-          response.data.payment_url;
-
-        return;
-      }
-
-      if (response.data.status === "paid") {
-
-        navigate("/dashboard");
-
-        return;
-      }
-
-    } catch (error) {
-      console.error(error);
-      setMessage(
-        error.response?.data?.message 
-          //"Unable to confirm payment."
-      );
-
-    } finally {
-      setProcessing(false);
-      navigate("/dashboard");
-    }
+    navigate("/payment/success");
+    return;
   }
 
   if (loading) {

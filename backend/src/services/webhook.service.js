@@ -1,18 +1,19 @@
 import { fetchInvoice, updateInvoice, updatewallet, fetchVirtualAccount, addWallet, fetchPayment, fetchWallet, addPayment } from "../models/payment.model.js";
 
+let paymentRef = null
+
 const reconcilePayment = async (payloadData) => {
     try {
-        const {transaction} = payloadData; // destructure payload data
-        const { transactionId, transactionAmount, aliasAccountReference } = transaction   // destructure transaction in payload data
-
+        const { eventData, eventType } = payloadData;
+        const { transactionReference, amountPaid, product } = eventData // destructure incoming webhook data
         // Check for duplicate payment
-        const paymentRes = await fetchPayment(transactionId);
+        const paymentRes = await fetchPayment(transactionReference);
         if (paymentRes) {
             return;
         }
 
         // Fetch existing virtual account data
-        const virtualAccountRes = await fetchVirtualAccount(aliasAccountReference);
+        const virtualAccountRes = await fetchVirtualAccount(product.reference);
         if (!virtualAccountRes) {
             throw new Error('Anonymous payment detected');
         };
@@ -21,21 +22,22 @@ const reconcilePayment = async (payloadData) => {
         const studentId = virtualAccountRes.student_id;
         const invoiceRes = await fetchInvoice(studentId);
         if (!invoiceRes) {
-            await handleOverpayment(studentId, transactionAmount)
+            await handleOverpayment(studentId, amountPaid)
             return;
         }
 
         // Update payment log
-        await addPayment(invoiceRes.id, transactionAmount, transactionId, payloadData)
+        await addPayment(invoiceRes.id, amountPaid, transactionReference, payloadData)
+        paymentRef = transactionReference
 
         // Handle reconciliation logic
-        const totalPaid = Number(invoiceRes.amount_paid) + Number(transactionAmount);
+        const totalPaid = Number(invoiceRes.amount_paid) + Number(amountPaid);
         const amountLeft = Number(invoiceRes.expected_amount) - Number(totalPaid);
 
         // Handle full payment
         if (amountLeft == 0) {
             const status = 'paid'
-            await updateInvoice(totalPaid, status, amountLeft, aliasAccountReference);
+            await updateInvoice(totalPaid, status, amountLeft, product.reference);
             return;
         }
 
@@ -44,13 +46,13 @@ const reconcilePayment = async (payloadData) => {
             const status = 'paid'
             const balance = Number(totalPaid) - Number(invoiceRes.expected_amount)
             await handleOverpayment (studentId, balance)
-            await updateInvoice(totalPaid, status, amountLeft, aliasAccountReference);
+            await updateInvoice(totalPaid, status, amountLeft, product.reference);
             return;
         }
 
         // Handle under payment
         const status = 'partially_paid'
-        await updateInvoice(totalPaid, status, amountLeft, aliasAccountReference);
+        await updateInvoice(totalPaid, status, amountLeft, product.reference);
     } 
     catch (error) {
         console.error(error.response?.data || error.message);
@@ -72,4 +74,26 @@ const handleOverpayment = async (studentId, transactionBalance) => {
         console.error(error.response?.data || error.message);
     }
 }
-export {reconcilePayment}
+
+const fetchPaymentStatus = async () => {
+    try {
+        const paymentRes = await fetchPayment(paymentRef); // fetch all the payment details
+        //console.log(paymentRes)
+        if (paymentRes) {
+            const paymentData = paymentRes.raw_webhook_payload.eventData;
+            paymentRef = null;
+            return (
+                {
+                    eventType: paymentRes.raw_webhook_payload.eventType,
+                    transactionReference: paymentData.transactionReference,
+                    paymentDate: paymentData.paidOn,
+                    paymentMethod: paymentData.paymentMethod,
+                    amountPaid: paymentData.amountPaid,
+                }
+            );
+        }
+    } catch (error) {
+        console.error(error.response?.data || error.message)
+    }
+}
+export {reconcilePayment, fetchPaymentStatus}

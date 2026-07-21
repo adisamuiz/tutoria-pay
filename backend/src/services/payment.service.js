@@ -42,20 +42,20 @@ const generateInvoice = async (studentId) => {
     }
 }
 
-const fetchPaymentStatus = async (studentId) => {
-    try {
-        const invoiceRes = await fetchInvoice(studentId); // fetch all the details on invoice
-        const paymentRes = await fetchPaymentStatus(invoiceRes.id)
-        if (!invoiceRes) {
-            const invoiceData = await generateInvoice(studentId) // generate invoice and VA if non exists for the student
-            return //invoiceData
-        }
-        //console.log(invoiceRes)
-        return invoiceRes;
-    } catch (error) {
-        console.error(error.response?.data || error.message)
-    }
-}
+// const fetchPaymentStatus = async (studentId) => {
+//     try {
+//         const invoiceRes = await fetchInvoice(studentId); // fetch all the details on invoice
+//         const paymentRes = await fetchPaymentStatus(invoiceRes.id)
+//         if (!invoiceRes) {
+//             const invoiceData = await generateInvoice(studentId) // generate invoice and VA if non exists for the student
+//             return //invoiceData
+//         }
+//         //console.log(invoiceRes)
+//         return invoiceRes;
+//     } catch (error) {
+//         console.error(error.response?.data || error.message)
+//     }
+// }
 
-export { fetchStudentEnrollmentsById, fetchPaymentInvoice, fetchPaymentStatus };
+export { fetchStudentEnrollmentsById, fetchPaymentInvoice };
 

@@ -52,7 +52,7 @@ npm run dev
 
 ### 👨‍💼 Admin
 
-**Email:** `admin@gmail.com`
+**Email:** `monnifyadmin@gmail.com`
 
 **Password:** `monnifyadmin`
 
@@ -60,7 +60,7 @@ npm run dev
 
 ### 👨‍🎓 Student
 
-**Email:** `student@gmail.com`
+**Email:** `monnifystudent@gmail.com`
 
 **Password:** `monnifystudent`
 
@@ -110,8 +110,8 @@ src/
 
 | Role    | Email               | Password       |
 | ------- | ------------------- | -------------- |
-| Admin   | `admin@gmail.com`   | `monnifyadmin`   |
-| Student | `student@gmail.com` | `monnifystudent` |
+| Admin   | `monnifyadmin@gmail.com`   | `monnifyadmin`   |
+| Student | `monnifystudent@gmail.com` | `monnifystudent` |
 
 ---
 

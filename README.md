@@ -1,6 +1,6 @@
 # TutoriaPay
 
-TutoriaPay is a modern tutorial fee management platform that simplifies how students pay for courses and how administrators manage payments. It provides a seamless experience for course registration, payment tracking, and automated payment reconcilliation, with integration-ready support for Nomba payment services.
+TutoriaPay is a modern tutorial fee management platform that simplifies how students pay for courses and how administrators manage payments. It provides a seamless experience for course registration, payment tracking, and automated payment reconcilliation, with integration-ready support for Monnify payment services.
 
 ## ✨ Features
 
@@ -11,7 +11,7 @@ TutoriaPay is a modern tutorial fee management platform that simplifies how stud
 * Payment history
 * Payment success and failure pages
 * Responsive modern UI
-* Nomba payment integration
+* Monnify payment integration
 * Dashboard for students and administrators
 
 ## 🛠️ Tech Stack
@@ -52,17 +52,17 @@ npm run dev
 
 ### 👨‍💼 Admin
 
-**Email:** `admin@gmail.com`
+**Email:** `monnifyadmin@gmail.com`
 
-**Password:** `nombaadmin`
+**Password:** `monnifyadmin`
 
 ---
 
 ### 👨‍🎓 Student
 
-**Email:** `student@gmail.com`
+**Email:** `monnifystudent@gmail.com`
 
-**Password:** `nombastudent`
+**Password:** `monnifystudent`
 
 ---
 
@@ -90,7 +90,7 @@ src/
 3. Student registers for selected courses.
 4. Student proceeds to the payment page.
 5. Transfer is made to the student virtual account.
-6. Payment is processed through Nomba and reconcilled.
+6. Payment is processed through Monnify and reconcilled.
 7. Payment status is displayed.
 8. Successful payments are recorded in the payment history.
 
@@ -110,8 +110,8 @@ src/
 
 | Role    | Email               | Password       |
 | ------- | ------------------- | -------------- |
-| Admin   | `admin@gmail.com`   | `nombaadmin`   |
-| Student | `student@gmail.com` | `nombastudent` |
+| Admin   | `monnifyadmin@gmail.com`   | `monnifyadmin`   |
+| Student | `monnifystudent@gmail.com` | `monnifystudent` |
 
 ---
 

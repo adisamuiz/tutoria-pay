@@ -62,11 +62,10 @@ const reconcilePayment = async (payloadData) => {
 
 const handleOverpayment = async (studentId, transactionBalance) => {
     try{
-        const newBalance = Number(walletRes.balance) + Number(transactionBalance)  // Calculate new wallet balance
         const walletRes = await fetchWallet(studentId);  // Fetch existing wallet
+        const newBalance = Number(walletRes.balance) + Number(transactionBalance)  // Calculate new wallet balance
         if (!walletRes) {
             await addWallet(studentId, transactionBalance);  // Create new wallet if none exists
-            await updatewallet(newBalance, studentId);
             return;
         }
         await updatewallet(newBalance, studentId);  // Update wallet with new balance

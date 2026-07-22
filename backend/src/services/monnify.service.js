@@ -34,7 +34,7 @@ const runBackgroundTokenManager = async () => {
             const refreshToken = await getAccessToken()
             cachedAccessToken = refreshToken.responseBody.accessToken;
             //console.log('newToken')
-        }, 3000000) 
+        }, 3603000) 
     }
     catch (error) {
         console.error (error.message)

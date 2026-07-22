@@ -161,7 +161,7 @@ export default function Dashboard() {
                 </p>
 
                 <h2 className="mt-2 text-3xl font-bold">
-                  ₦{payments.wallet.balance.toLocaleString()}
+                  ₦{payments.wallet.balance.toLocaleString()} || 0
                 </h2>
 
               </div>

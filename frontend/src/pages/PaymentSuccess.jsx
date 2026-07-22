@@ -30,7 +30,7 @@ export default function PaymentSuccess() {
 
     try {
       const res = await api.get(`/payments/me/status`);
-      console.log(res)
+      //console.log(res)
       setPayment(res.data);
 
     } catch (error) {

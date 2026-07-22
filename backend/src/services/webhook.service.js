@@ -82,7 +82,7 @@ const fetchPaymentStatus = async () => {
                 {
                     eventType: paymentRes.raw_webhook_payload.eventType,
                     transactionReference: paymentData.transactionReference.split('|').at(-1),
-                    paymentDate: paymentData.paidOn.split(',').at(1),
+                    paymentDate: paymentData.paidOn,
                     paymentMethod: paymentData.paymentMethod,
                     amountPaid: paymentData.amountPaid,
                 }
